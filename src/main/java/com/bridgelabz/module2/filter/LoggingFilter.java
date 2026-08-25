@@ -13,7 +13,8 @@ import java.io.IOException;
 
 @Component
 @Order(1)
-public class LoggingFilter extends OncePerRequestFilter {
+public class LoggingFilter
+        extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
@@ -27,9 +28,12 @@ public class LoggingFilter extends OncePerRequestFilter {
         );
 
         System.out.println(
-                "Request: "
+                "Method: "
                         + request.getMethod()
-                        + " "
+        );
+
+        System.out.println(
+                "URI: "
                         + request.getRequestURI()
         );
 

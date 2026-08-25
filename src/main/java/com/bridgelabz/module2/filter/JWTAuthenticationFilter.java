@@ -1,7 +1,5 @@
 package com.bridgelabz.module2.filter;
 
-import com.bridgelabz.module2.security.SecurityContext;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +13,8 @@ import java.io.IOException;
 
 @Component
 @Order(2)
-public class JWTAuthenticationFilter extends OncePerRequestFilter {
+public class JWTAuthenticationFilter
+        extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
@@ -31,31 +30,52 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         String authorization =
                 request.getHeader("Authorization");
 
-        if (authorization != null &&
-                authorization.startsWith("Bearer ")) {
+        System.out.println(
+                "Authorization: "
+                        + authorization
+        );
 
-            /*
-             * Normally:
-             *
-             * JWT
-             *   ↓
-             * validate token
-             *   ↓
-             * extract username
-             *
-             * For demonstration:
-             */
-            String username = "Karthik";
+        if (authorization == null ||
+                !authorization.startsWith("Bearer ")) {
 
-            SecurityContext.setUser(
-                    username
+            response.setStatus(
+                    HttpServletResponse.SC_UNAUTHORIZED
             );
 
-            System.out.println(
-                    "Authenticated user: "
-                            + username
+            response.setContentType(
+                    "application/json"
             );
+
+            response.getWriter().write(
+                    """
+                    {
+                        "status": 401,
+                        "message": "JWT token is missing"
+                    }
+                    """
+            );
+
+            return;
         }
+
+        /*
+         * In a real application:
+         *
+         * 1. Extract JWT
+         * 2. Validate signature
+         * 3. Check expiration
+         * 4. Extract username
+         * 5. Create Authentication
+         * 6. Put Authentication into
+         *    SecurityContextHolder
+         *
+         * For Scenario 17 we are only
+         * demonstrating the request flow.
+         */
+
+        System.out.println(
+                "JWT token received"
+        );
 
         filterChain.doFilter(
                 request,
