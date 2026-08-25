@@ -4,13 +4,16 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+@Order(1)
+public class LoggingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
@@ -19,19 +22,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        System.out.println("===== JWT FILTER STARTED =====");
+        System.out.println(
+                "===== LOGGING FILTER ====="
+        );
 
-        String authorization = request.getHeader("Authorization");
+        System.out.println(
+                "Request: "
+                        + request.getMethod()
+                        + " "
+                        + request.getRequestURI()
+        );
 
-        System.out.println("Authorization: " + authorization);
-
-        // JWT validation would happen here
-
-        System.out.println("JWT validation completed");
-
-        // IMPORTANT:
-//        filterChain.doFilter(request, response);
-
-        System.out.println("===== JWT FILTER ENDED =====");
+        filterChain.doFilter(
+                request,
+                response
+        );
     }
 }
