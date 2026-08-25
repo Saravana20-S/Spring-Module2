@@ -73,3 +73,6 @@ logs/
 # Generated Files
 # =========================
 *.class
+
+#application-properties
+D:\module2\src\main\resources\application.properties
